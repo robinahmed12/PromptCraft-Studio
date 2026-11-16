@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Send, Sliders, Bot, User, Wand2, Clock, Zap, Menu, Activity } from "lucide-react";
 import { Session } from "../types/chat";
 import { StructuredJsonViewer } from "./StructuredJsonViewer";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
 
@@ -195,8 +196,12 @@ export function ChatWindow({
                       : "bg-[var(--bg-ai-msg)] border border-[var(--border-subtle)] text-[var(--text-main)] rounded-bl-none"
                   }`}
                 >
-                  {/* Clean Plain Text Rendering with Natural Line Breaks */}
-                  <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
+                  {/* Clean Formatted Text like ChatGPT (no raw markdown hashes/asterisks) */}
+                  {isUser ? (
+                    <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
+                  ) : (
+                    <MarkdownRenderer content={message.content} />
+                  )}
 
                   {/* Show Structured JSON Viewer only when data is present */}
                   {message.structuredData && (
