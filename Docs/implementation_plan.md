@@ -1,6 +1,6 @@
 # Technical Implementation Plan: AI Text Assistant
 
-**Project Name:** AI-Chat  
+**Project Name:** PromptCraft Studio (PromptCraft-Studio)  
 **Database:** Neon DB (Serverless PostgreSQL)  
 **Backend:** Express.js (Node.js, TypeScript, Prisma ORM, OpenAI SDK)  
 **Frontend:** Next.js (App Router, TypeScript, Tailwind CSS, Lucide Icons)  

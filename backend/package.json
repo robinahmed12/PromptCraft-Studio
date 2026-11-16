@@ -8,6 +8,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "test:openrouter": "tsx src/test-openrouter.ts",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push"
   },
