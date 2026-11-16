@@ -1,12 +1,12 @@
 {
-  "name": "ai-chat-backend",
+  "name": "promptcraft-api",
   "version": "1.0.0",
   "description": "AI Text Assistant Backend with Express, Prisma, and OpenAI",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsup",
     "start": "node dist/index.js",
     "test:openrouter": "tsx src/test-openrouter.ts",
     "prisma:generate": "prisma generate",
@@ -25,6 +25,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.9",
     "prisma": "^6.4.1",
+    "tsup": "^9.0.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   }

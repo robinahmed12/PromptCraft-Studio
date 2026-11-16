@@ -9,8 +9,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middlewares
-app.use(cors({ origin: "*" }));
+// Permissive CORS for cross-domain and serverless routing
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  })
+);
+app.options("*", cors());
+
 app.use(express.json());
 
 // Routes
@@ -34,7 +42,12 @@ async function startServer() {
   });
 }
 
-startServer().catch((err) => {
-  console.error("Fatal startup error:", err);
-  process.exit(1);
-});
+// Only listen on port when not running as a Vercel serverless function
+if (!process.env.VERCEL) {
+  startServer().catch((err) => {
+    console.error("Fatal startup error:", err);
+  });
+}
+
+export default app;
+export { app };

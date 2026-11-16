@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { OpenAI } from "openai";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -32,7 +32,7 @@ const openaiApiKey = process.env.OPENAI_API_KEY;
 export const DEFAULT_MODEL = process.env.OPENROUTER_MODEL || "nvidia/nemotron-3-ultra-550b-a55b:free";
 const forceMock = process.env.USE_MOCK_LLM === "true";
 
-let client: OpenAI | null = null;
+let client: any = null;
 
 if (!forceMock) {
   if (openrouterApiKey && openrouterApiKey.trim() !== "") {
@@ -48,29 +48,17 @@ if (!forceMock) {
   } else if (openaiApiKey && openaiApiKey.trim() !== "") {
     client = new OpenAI({ apiKey: openaiApiKey });
     console.log("🔌 [OpenAI] Initialized live OpenAI client.");
+  } else {
+    console.warn("⚠️ No live LLM API key found in backend/.env. System will require OPENROUTER_API_KEY.");
   }
 }
 
-/**
- * Approximate token count estimation (1 token ~= 4 chars of English text)
- */
-function estimateTokens(text: string): number {
-  if (!text) return 0;
-  return Math.ceil(text.length / 4);
-}
-
-/**
- * Execute LLM completion via OpenRouter / OpenAI SDK
- */
 export async function generateCompletion(
   userMessage: string,
   options: LLMRequestOptions = {}
 ): Promise<LLMResponseResult> {
   const startTime = Date.now();
-  // Prefer OpenRouter model if configured
-  const model = (options.model && options.model !== "gpt-4o-mini") 
-    ? options.model 
-    : (openrouterApiKey ? DEFAULT_MODEL : options.model || "gpt-4o-mini");
+  const model = options.model || DEFAULT_MODEL;
   const temperature = options.temperature ?? 0.7;
   const maxTokens = options.maxTokens ?? 1500;
   const isJson = options.responseFormat === "json_object";
@@ -82,7 +70,7 @@ export async function generateCompletion(
   }
 
   // Build messages array
-  const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [];
+  const messages: any[] = [];
 
   const baseSystemPrompt = options.systemPrompt && options.systemPrompt.trim()
     ? options.systemPrompt
@@ -100,7 +88,7 @@ export async function generateCompletion(
   if (options.history && options.history.length > 0) {
     for (const msg of options.history) {
       messages.push({
-        role: msg.role as any,
+        role: msg.role,
         content: msg.content,
       });
     }
@@ -111,7 +99,7 @@ export async function generateCompletion(
     content: userMessage,
   });
 
-  const completionParams: OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming = {
+  const completionParams: any = {
     model,
     messages,
     temperature,
@@ -123,35 +111,35 @@ export async function generateCompletion(
     const response = await client.chat.completions.create(completionParams);
     const latencyMs = Date.now() - startTime;
 
-    const choice = response.choices[0];
-    const rawContent = choice?.message?.content || "";
-    let structuredData: any = null;
+    const rawChoice = response.choices?.[0];
+    const rawContent = rawChoice?.message?.content || "";
 
-    if (isJson && rawContent) {
+    const usage = response.usage || {};
+    const promptTokens = usage.prompt_tokens || 0;
+    const completionTokens = usage.completion_tokens || 0;
+    const totalTokens = usage.total_tokens || promptTokens + completionTokens;
+
+    let structuredData: any = undefined;
+    if (isJson) {
       try {
-        // Strip code fence if model wrapped in ```json ... ```
-        const cleaned = rawContent.replace(/^```json\s*/i, "").replace(/^```\s*/, "").replace(/```$/, "").trim();
-        structuredData = JSON.parse(cleaned);
-      } catch (err) {
-        console.warn("Could not parse JSON response from LLM:", err);
+        structuredData = JSON.parse(rawContent);
+      } catch (e) {
+        console.warn("Model response was not valid JSON:", rawContent);
+        structuredData = { raw: rawContent, parseError: true };
       }
     }
-
-    const usage = response.usage;
-    const promptTokens = usage?.prompt_tokens ?? estimateTokens(JSON.stringify(messages));
-    const completionTokens = usage?.completion_tokens ?? estimateTokens(rawContent);
 
     return {
       content: rawContent,
       structuredData,
       promptTokens,
       completionTokens,
-      totalTokens: usage?.total_tokens ?? (promptTokens + completionTokens),
+      totalTokens,
       latencyMs,
       isMock: false,
     };
-  } catch (error: any) {
-    console.error("OpenRouter API error:", error?.message || error);
-    throw new Error(`OpenRouter API call failed: ${error?.message || error}`);
+  } catch (err: any) {
+    console.error("OpenRouter LLM completion error:", err);
+    throw new Error(`LLM Error: ${err.message || "Failed to generate completion from OpenRouter"}`);
   }
 }
