@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Sliders, Bot, User, Sparkles, Clock, Zap, Menu, Activity } from "lucide-react";
+import { Send, Sliders, Bot, User, Wand2, Clock, Zap, Menu, Activity } from "lucide-react";
 import { Session } from "../types/chat";
 import { StructuredJsonViewer } from "./StructuredJsonViewer";
+import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 
 interface ChatWindowProps {
   session: Session | null;
@@ -48,15 +48,18 @@ export function ChatWindow({
 
   if (!session) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-[#94A3B8] bg-[#1E293B]">
+      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-[var(--text-muted)] bg-[var(--bg-chat)]">
         <div className="lg:hidden absolute top-4 left-4">
           <Button variant="ghost" size="icon" onClick={onOpenMobileSidebar}>
-            <Menu className="w-5 h-5 text-[#F8FAFC]" />
+            <Menu className="w-5 h-5 text-[var(--text-main)]" />
           </Button>
         </div>
-        <Sparkles className="w-12 h-12 text-[#6366F1] mb-4" />
-        <h2 className="text-xl font-bold text-[#F8FAFC] mb-2">Welcome to PromptCraft Studio</h2>
-        <p className="text-sm max-w-md text-[#94A3B8]">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        <Wand2 className="w-12 h-12 text-[#6366F1] mb-4" />
+        <h2 className="text-xl font-bold text-[var(--text-main)] mb-2">Welcome to PromptCraft Studio</h2>
+        <p className="text-sm max-w-md text-[var(--text-muted)]">
           Select an existing conversation from the sidebar or tap "New Conversation" to begin.
         </p>
       </div>
@@ -66,33 +69,33 @@ export function ChatWindow({
   const messages = session.messages || [];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#1E293B] overflow-hidden text-[#F8FAFC] relative">
+    <div className="flex-1 flex flex-col h-full bg-[var(--bg-chat)] overflow-hidden text-[var(--text-main)] relative">
       {/* Top Header */}
-      <div className="px-4 lg:px-6 py-3 border-b border-[#334155] bg-[#1E293B] flex items-center justify-between shrink-0 shadow-sm">
+      <div className="px-4 lg:px-6 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-header)] flex items-center justify-between shrink-0 shadow-sm">
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           {/* Mobile Sidebar Hamburger */}
           <Button
             variant="ghost"
             size="icon"
             onClick={onOpenMobileSidebar}
-            className="lg:hidden h-8 w-8 text-[#94A3B8] hover:text-[#F8FAFC]"
+            className="lg:hidden h-8 w-8 text-[var(--text-muted)] hover:text-[var(--text-main)]"
             title="Open Conversations"
           >
             <Menu className="w-4 h-4" />
           </Button>
 
-          <div className="p-2 rounded-xl bg-[#0B1120] border border-[#334155] text-[#6366F1] shrink-0">
+          <div className="p-2 rounded-xl bg-[var(--bg-main)] border border-[var(--border-subtle)] text-[#6366F1] shrink-0">
             <Bot className="w-4 h-4 text-[#6366F1]" />
           </div>
 
           <div className="min-w-0">
-            <h2 className="font-semibold text-xs sm:text-sm text-[#F8FAFC] truncate max-w-[160px] sm:max-w-xs md:max-w-md">
+            <h2 className="font-semibold text-xs sm:text-sm text-[var(--text-main)] truncate max-w-[140px] sm:max-w-xs md:max-w-md">
               {session.title}
             </h2>
-            <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-[#94A3B8] truncate">
+            <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-[var(--text-muted)] truncate">
               <span className="font-mono text-[#6366F1]">{session.model}</span>
               <span>•</span>
-              <span>Temp: <strong className="text-[#F8FAFC]">{session.temperature}</strong></span>
+              <span>Temp: <strong className="text-[var(--text-main)]">{session.temperature}</strong></span>
               <span>•</span>
               <span className="font-mono">{session.responseFormat}</span>
             </div>
@@ -100,12 +103,15 @@ export function ChatWindow({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Dark / Light Mode Toggle */}
+          {/* <ThemeToggle /> */}
+
           {/* Config & Persona Button */}
           <Button
             onClick={onOpenSettings}
             variant="secondary"
             size="sm"
-            className="gap-1.5 bg-[#0B1120] hover:bg-[#334155] border-[#334155] text-[#F8FAFC]"
+            className="gap-1.5 bg-[var(--bg-card)] hover:bg-[var(--bg-main)] border-[var(--border-subtle)] text-[var(--text-main)]"
           >
             <Sliders className="w-3.5 h-3.5 text-[#6366F1]" />
             <span className="hidden sm:inline">Config & Persona</span>
@@ -116,7 +122,7 @@ export function ChatWindow({
             onClick={onOpenMobileInspector}
             variant="ghost"
             size="icon"
-            className="lg:hidden h-8 w-8 text-[#94A3B8] hover:text-[#F8FAFC]"
+            className="lg:hidden h-8 w-8 text-[var(--text-muted)] hover:text-[var(--text-main)]"
             title="Open Inspector"
           >
             <Activity className="w-4 h-4 text-[#6366F1]" />
@@ -125,40 +131,46 @@ export function ChatWindow({
       </div>
 
       {/* Messages Stream */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 bg-[#1E293B]">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 bg-[var(--bg-chat)]">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-8 sm:py-12">
-            <div className="p-3 rounded-2xl bg-[#0B1120] border border-[#334155] text-[#6366F1]">
-              <Sparkles className="w-8 h-8 text-[#6366F1]" />
+            <div className="p-3.5 rounded-2xl bg-[var(--bg-main)] border border-[var(--border-subtle)] text-[#6366F1] shadow-sm">
+              <Wand2 className="w-8 h-8 text-[#6366F1]" />
             </div>
-            <h3 className="text-base font-semibold text-[#F8FAFC]">Start the conversation</h3>
-            <p className="text-xs text-[#94A3B8] max-w-md px-2">
-              Explore LLM fundamentals, behavior parameters, or test structured responses.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-lg w-full pt-2">
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold text-[var(--text-main)]">How can I help you today?</h3>
+              <p className="text-xs text-[var(--text-muted)] max-w-md px-2 mt-1">
+                Ask questions, brainstorm ideas, draft content, summarize information, or write code.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-w-lg w-full pt-2">
               <button
-                onClick={() => setInput("Explain tokens and tokenization in 2 sentences.")}
-                className="p-3 text-left rounded-xl border border-[#334155] bg-[#0B1120]/70 hover:bg-[#0B1120] hover:border-[#6366F1]/50 text-xs text-[#F8FAFC] transition-all"
+                onClick={() => setInput("Brainstorm 5 creative project ideas for a web application.")}
+                className="p-3.5 text-left rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-main)] hover:border-[#6366F1]/50 text-xs text-[var(--text-main)] transition-all shadow-sm group"
               >
-                💡 Explain tokens and tokenization
+                <div className="font-medium text-[var(--text-main)] group-hover:text-[#6366F1] transition-colors">💡 Brainstorm Ideas</div>
+                <div className="text-[11px] text-[var(--text-muted)] mt-0.5">Creative concepts for a web app</div>
               </button>
               <button
-                onClick={() => setInput("What is the difference between temperature 0.0 and 1.5?")}
-                className="p-3 text-left rounded-xl border border-[#334155] bg-[#0B1120]/70 hover:bg-[#0B1120] hover:border-[#6366F1]/50 text-xs text-[#F8FAFC] transition-all"
+                onClick={() => setInput("Write a polite, professional follow-up email after a job interview.")}
+                className="p-3.5 text-left rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-main)] hover:border-[#6366F1]/50 text-xs text-[var(--text-main)] transition-all shadow-sm group"
               >
-                🌡️ Compare Temperature 0.0 vs 1.5
+                <div className="font-medium text-[var(--text-main)] group-hover:text-[#6366F1] transition-colors">✍️ Help Me Write</div>
+                <div className="text-[11px] text-[var(--text-muted)] mt-0.5">Professional email or cover letter</div>
               </button>
               <button
-                onClick={() => setInput("Extract key themes and entities from: 'Transformers use multi-head attention to process entire sequences simultaneously.'")}
-                className="p-3 text-left rounded-xl border border-[#334155] bg-[#0B1120]/70 hover:bg-[#0B1120] hover:border-[#6366F1]/50 text-xs text-[#F8FAFC] transition-all"
+                onClick={() => setInput("Explain quantum computing in simple terms using an everyday analogy.")}
+                className="p-3.5 text-left rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-main)] hover:border-[#6366F1]/50 text-xs text-[var(--text-main)] transition-all shadow-sm group"
               >
-                📊 Extract key themes & entities
+                <div className="font-medium text-[var(--text-main)] group-hover:text-[#6366F1] transition-colors">🔍 Explain a Concept</div>
+                <div className="text-[11px] text-[var(--text-muted)] mt-0.5">Simple analogies for complex topics</div>
               </button>
               <button
-                onClick={() => setInput("How does pretraining differ from fine-tuning?")}
-                className="p-3 text-left rounded-xl border border-[#334155] bg-[#0B1120]/70 hover:bg-[#0B1120] hover:border-[#6366F1]/50 text-xs text-[#F8FAFC] transition-all"
+                onClick={() => setInput("Write a clean TypeScript function to debounce an API call.")}
+                className="p-3.5 text-left rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-main)] hover:border-[#6366F1]/50 text-xs text-[var(--text-main)] transition-all shadow-sm group"
               >
-                🧠 Pretraining vs Fine-tuning
+                <div className="font-medium text-[var(--text-main)] group-hover:text-[#6366F1] transition-colors">💻 Code & Debug</div>
+                <div className="text-[11px] text-[var(--text-muted)] mt-0.5">Write, debug, or optimize code</div>
               </button>
             </div>
           </div>
@@ -171,7 +183,7 @@ export function ChatWindow({
                 className={`flex gap-2.5 sm:gap-3 max-w-3xl ${isUser ? "ml-auto justify-end" : "mr-auto justify-start"}`}
               >
                 {!isUser && (
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#1F2937] border border-[#334155] flex items-center justify-center text-[#6366F1] shrink-0 shadow-sm mt-0.5">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center text-[#6366F1] shrink-0 shadow-sm mt-0.5">
                     <Bot className="w-4 h-4 text-[#6366F1]" />
                   </div>
                 )}
@@ -179,18 +191,20 @@ export function ChatWindow({
                 <div
                   className={`rounded-2xl p-3.5 sm:p-4 text-xs leading-relaxed max-w-[85vw] sm:max-w-xl md:max-w-2xl shadow-sm ${
                     isUser
-                      ? "bg-[#4F46E5] text-[#F8FAFC] font-medium rounded-br-none shadow-md shadow-indigo-950/40"
-                      : "bg-[#1F2937] border border-[#334155] text-[#F8FAFC] rounded-bl-none"
+                      ? "bg-[var(--bg-user-msg)] text-white font-medium rounded-br-none shadow-md shadow-indigo-950/40"
+                      : "bg-[var(--bg-ai-msg)] border border-[var(--border-subtle)] text-[var(--text-main)] rounded-bl-none"
                   }`}
                 >
-                  <div className="whitespace-pre-wrap">{message.content}</div>
+                  {/* Clean Plain Text Rendering with Natural Line Breaks */}
+                  <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
 
+                  {/* Show Structured JSON Viewer only when data is present */}
                   {message.structuredData && (
                     <StructuredJsonViewer data={message.structuredData} />
                   )}
 
                   {!isUser && (message.totalTokens > 0 || message.latencyMs > 0) && (
-                    <div className="mt-3 pt-2 border-t border-[#334155]/60 flex flex-wrap items-center gap-3 text-[10px] text-[#94A3B8] font-mono">
+                    <div className="mt-3 pt-2 border-t border-[var(--border-subtle)]/60 flex flex-wrap items-center gap-3 text-[10px] text-[var(--text-muted)] font-mono">
                       {message.latencyMs > 0 && (
                         <span className="flex items-center gap-1 text-[#6366F1]">
                           <Clock className="w-3 h-3 text-[#6366F1]" />
@@ -198,7 +212,7 @@ export function ChatWindow({
                         </span>
                       )}
                       {message.totalTokens > 0 && (
-                        <span className="flex items-center gap-1 text-[#F8FAFC]">
+                        <span className="flex items-center gap-1 text-[var(--text-main)]">
                           <Zap className="w-3 h-3 text-amber-400" />
                           <span>{message.totalTokens} tokens ({message.promptTokens} in / {message.completionTokens} out)</span>
                         </span>
@@ -208,7 +222,7 @@ export function ChatWindow({
                 </div>
 
                 {isUser && (
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#4F46E5]/40 border border-[#6366F1] flex items-center justify-center text-[#F8FAFC] shrink-0 mt-0.5">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#4F46E5]/40 border border-[#6366F1] flex items-center justify-center text-white shrink-0 mt-0.5">
                     <User className="w-4 h-4" />
                   </div>
                 )}
@@ -219,15 +233,15 @@ export function ChatWindow({
 
         {/* Loading Indicator */}
         {isLoading && (
-          <div className="flex gap-2.5 sm:gap-3 mr-auto items-center text-[#94A3B8] text-xs">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#1F2937] border border-[#334155] flex items-center justify-center text-[#6366F1] shrink-0 shadow-sm animate-pulse">
+          <div className="flex gap-2.5 sm:gap-3 mr-auto items-center text-[var(--text-muted)] text-xs">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center text-[#6366F1] shrink-0 shadow-sm animate-pulse">
               <Bot className="w-4 h-4 text-[#6366F1]" />
             </div>
-            <div className="flex items-center gap-2 p-3 rounded-2xl bg-[#1F2937] border border-[#334155]">
+            <div className="flex items-center gap-2 p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
               <span className="w-2 h-2 rounded-full bg-[#6366F1] animate-bounce" />
               <span className="w-2 h-2 rounded-full bg-[#6366F1] animate-bounce [animation-delay:0.2s]" />
               <span className="w-2 h-2 rounded-full bg-[#6366F1] animate-bounce [animation-delay:0.4s]" />
-              <span className="text-[11px] text-[#F8FAFC] ml-1">Computing LLM response...</span>
+              <span className="text-[11px] text-[var(--text-main)] ml-1">Computing LLM response...</span>
             </div>
           </div>
         )}
@@ -236,7 +250,7 @@ export function ChatWindow({
       </div>
 
       {/* Input Area */}
-      <div className="p-3 sm:p-4 border-t border-[#334155] bg-[#0B1120] shrink-0">
+      <div className="p-3 sm:p-4 border-t border-[var(--border-subtle)] bg-[var(--bg-input-bar)] shrink-0">
         <form onSubmit={handleSubmit} className="relative max-w-4xl mx-auto flex items-end gap-2">
           <textarea
             value={input}
@@ -245,20 +259,17 @@ export function ChatWindow({
             rows={1}
             disabled={isLoading}
             placeholder="Type your prompt here... (Press Enter to send, Shift+Enter for new line)"
-            className="w-full bg-[#1E293B] border border-[#334155] rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-[#F8FAFC] text-xs focus:outline-none focus:border-[#6366F1] transition-colors resize-none placeholder:text-[#94A3B8]/60 min-h-[42px] max-h-32"
+            className="w-full bg-[var(--bg-input-box)] border border-[var(--border-subtle)] rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-[var(--text-main)] text-xs focus:outline-none focus:border-[#6366F1] transition-colors resize-none placeholder:text-[var(--text-muted)]/60 min-h-[42px] max-h-32"
           />
           <Button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="h-[42px] px-3.5 sm:px-4 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-[#F8FAFC] shrink-0"
+            className="h-[42px] px-3.5 sm:px-4 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white shrink-0"
             title="Send Message"
           >
             <Send className="w-4 h-4" />
           </Button>
         </form>
-        <div className="text-center text-[10px] text-[#94A3B8] mt-2 hidden sm:block">
-          Connected to <strong>Neon DB PostgreSQL</strong> • Live inference via <strong>OpenRouter</strong>
-        </div>
       </div>
     </div>
   );

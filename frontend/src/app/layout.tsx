@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { ThemeProvider } from "../context/ThemeContext";
 
 export const metadata: Metadata = {
   title: "PromptCraft Studio - AI Text Assistant",
@@ -19,9 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="antialiased bg-[#0B1120] text-[#F8FAFC] min-h-[100dvh] overflow-hidden select-none">
-        {children}
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <body className="antialiased bg-[var(--bg-main)] text-[var(--text-main)] min-h-[100dvh] overflow-hidden select-none">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

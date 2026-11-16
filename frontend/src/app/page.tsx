@@ -168,7 +168,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-[100dvh] w-screen overflow-hidden bg-[#0B1120] text-[#F8FAFC] font-sans">
+    <div className="flex h-[100dvh] w-screen overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)] font-sans">
       {/* Desktop Sidebar (hidden on mobile/tablet) */}
       <div className="hidden lg:flex shrink-0 h-full">
         <Sidebar

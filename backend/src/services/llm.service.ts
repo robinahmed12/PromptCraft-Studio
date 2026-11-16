@@ -86,11 +86,11 @@ export async function generateCompletion(
 
   const baseSystemPrompt = options.systemPrompt && options.systemPrompt.trim()
     ? options.systemPrompt
-    : "You are a helpful and knowledgeable AI assistant.";
+    : "You are a helpful and knowledgeable AI assistant. Always provide clear, direct, and well-structured responses in natural plain text, just like ChatGPT.";
 
   const finalSystemPrompt = isJson
     ? `${baseSystemPrompt}\n\nIMPORTANT: You MUST respond ONLY with a valid, well-formed JSON object. Do not include markdown formatting or commentary outside the JSON.`
-    : baseSystemPrompt;
+    : `${baseSystemPrompt}\n\nIMPORTANT: Respond in natural, clean plain text like ChatGPT. Do not return JSON or code formatting unless explicitly requested.`;
 
   messages.push({
     role: "system",

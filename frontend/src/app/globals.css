@@ -1,30 +1,52 @@
 @import "tailwindcss";
 
-@theme {
-  --color-main-bg: #0B1120;
-  --color-sidebar-bg: #111827;
-  --color-chat-bg: #1E293B;
-  --color-primary-btn: #6366F1;
-  --color-user-msg: #4F46E5;
-  --color-ai-msg: #1F2937;
-  --color-text-main: #F8FAFC;
-  --color-text-muted: #94A3B8;
-  --color-border-slate: #334155;
+:root, [data-theme="dark"] {
+  --bg-main: #0B1120;
+  --bg-sidebar: #111827;
+  --bg-chat: #1E293B;
+  --bg-card: #1F2937;
+  --bg-header: #1E293B;
+  --bg-input-bar: #0B1120;
+  --bg-input-box: #1E293B;
+  --bg-ai-msg: #1F2937;
+  --bg-user-msg: #4F46E5;
+  --border-subtle: #334155;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --primary-btn: #6366F1;
+  --primary-btn-hover: #4F46E5;
+  --scrollbar-thumb: #334155;
+  --scrollbar-hover: #475569;
 }
 
-:root {
-  --background: #0B1120;
-  --foreground: #F8FAFC;
+[data-theme="light"] {
+  --bg-main: #F8FAFC;
+  --bg-sidebar: #F1F5F9;
+  --bg-chat: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-header: #FFFFFF;
+  --bg-input-bar: #F8FAFC;
+  --bg-input-box: #FFFFFF;
+  --bg-ai-msg: #F1F5F9;
+  --bg-user-msg: #4F46E5;
+  --border-subtle: #E2E8F0;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --primary-btn: #6366F1;
+  --primary-btn-hover: #4F46E5;
+  --scrollbar-thumb: #CBD5E1;
+  --scrollbar-hover: #94A3B8;
 }
 
 body {
-  color: #F8FAFC;
-  background: #0B1120;
+  color: var(--text-main);
+  background: var(--bg-main);
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100dvh;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Shadcn-like custom smooth scrollbar */
@@ -38,10 +60,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--scrollbar-thumb, #334155);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: var(--scrollbar-hover, #475569);
 }
